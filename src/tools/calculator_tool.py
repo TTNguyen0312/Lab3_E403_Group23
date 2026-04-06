@@ -24,12 +24,36 @@ CALCULATOR_TOOL_SPEC = {
 }
 
 
-def calculate_trip_budget(items: List[Dict[str, Any]], budget: float, days: int = 1, travelers: int = 1) -> Dict[str, Any]:
+def calculate_trip_budget(
+    items: List[Dict[str, Any]],
+    budget: float,
+    days: int = 1,
+    travelers: int = 1
+) -> Dict[str, Any]:
+    """
+    Calculate total trip cost.
+
+    Args:
+        items: List of items (must contain estimated_cost)
+        budget: Total budget
+        days: Number of days
+        travelers: Number of travelers
+
+    Returns:
+        subtotal, total, remaining, within_budget
+    """
+
+    if not isinstance(items, list):
+        raise ValueError("items must be a list")
+
     subtotal = 0.0
 
     for item in items:
-        cost = float(item.get("estimated_cost", 0))
-        subtotal += cost
+        try:
+            cost = float(item.get("estimated_cost", 0))
+            subtotal += cost
+        except Exception:
+            continue  # ignore bad items
 
     total = subtotal * max(travelers, 1)
     remaining = float(budget) - total

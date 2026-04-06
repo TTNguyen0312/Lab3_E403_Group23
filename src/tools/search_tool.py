@@ -25,7 +25,24 @@ SEARCH_TOOL_SPEC = {
 }
 
 
-def search_travel_data(city: str, category: str, max_results: int = 5, query: str = "") -> Dict[str, Any]:
+def search_travel_data(
+    city: str,
+    category: str,
+    max_results: int = 5,
+    query: str = ""
+) -> Dict[str, Any]:
+    """
+    Search travel data by city and category.
+
+    Args:
+        city (str): City name (e.g., "Da Nang")
+        category (str): One of ["attractions", "food", "hotels", "transport"]
+        max_results (int): Max number of results (default 5)
+        query (str): Optional keyword filter
+
+    Returns:
+        Dict with keys: city, category, count, results[]
+    """
     city_key = city.strip().lower()
     category_key = category.strip().lower()
 
@@ -41,9 +58,19 @@ def search_travel_data(city: str, category: str, max_results: int = 5, query: st
                 filtered.append(item)
         results = filtered
 
+    # Ensure the return format matches the expected structure
     return {
         "city": city,
         "category": category,
-        "count": min(len(results), max_results),
-        "results": results[:max_results]
+        "count": len(results[:max_results]),
+        "results": [
+            {
+                "name": item.get("name"),
+                "type": item.get("type"),
+                "estimated_cost": item.get("estimated_cost_usd"),  # Map cost field
+                "duration_hours": item.get("duration_hours"),
+                "notes": item.get("notes")
+            }
+            for item in results[:max_results]
+        ]
     }
