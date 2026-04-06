@@ -1,7 +1,7 @@
 from typing import Dict, Any, Optional
 
 from src.core.llm_provider import LLMProvider
-from src.core.provider_factory import create_provider
+from src.core.openai_provider import OpenAIProvider
 from src.telemetry.logger import logger
 from src.telemetry.metrics import tracker
 
@@ -73,7 +73,7 @@ def run_chatbot(
         )
         return result
 
-    llm = provider or create_provider("openai")
+    llm = provider or OpenAIProvider()
     prompt_to_use = system_prompt or build_chatbot_system_prompt()
 
     logger.log_event("CHATBOT_START", {"model": llm.model_name, "prompt": prompt})
