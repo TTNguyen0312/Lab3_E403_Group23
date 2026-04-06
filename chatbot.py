@@ -12,8 +12,9 @@ SYSTEM_PROMPT = (
     "and budget-friendly options. "
     "When relevant, organize the answer by day, estimate costs in USD, "
     "highlight assumptions clearly, and keep the plan realistic and concise. "
-    "If the request clearly needs external tools, strict budget validation, or multi-step action planning, "
-    "do not invent a full answer. Say it should be handled by the ReAct agent."
+    "You may answer normal travel-planning requests directly using reasonable estimates. "
+    "Only say the request should be handled by the ReAct agent when the user explicitly needs "
+    "live prices, availability checks, booking actions, or external verification."
 )
 
 
@@ -24,16 +25,18 @@ def build_chatbot_system_prompt() -> str:
 def _needs_agent_or_tools(prompt: str) -> bool:
     normalized_prompt = prompt.lower()
     high_risk_patterns = [
-        "plan a ",
-        "itinerary",
-        "under $",
-        "budget",
-        "compare",
-        "cheapest",
-        "calculate",
-        "total cost",
-        "step by step",
-        "find the best",
+        "real-time",
+        "live price",
+        "latest price",
+        "current price",
+        "availability",
+        "available now",
+        "book for me",
+        "make a booking",
+        "reserve for me",
+        "search the web",
+        "look it up",
+        "verify online",
     ]
     return any(pattern in normalized_prompt for pattern in high_risk_patterns)
 
@@ -41,9 +44,9 @@ def _needs_agent_or_tools(prompt: str) -> bool:
 def _build_agent_handoff_response(prompt: str) -> Dict[str, Any]:
     return {
         "content": (
-            "This request looks like it needs tools or a ReAct agent for grounded planning, "
-            "budget checking, or multi-step reasoning. Please use the agent pipeline instead "
-            "of the baseline chatbot for this prompt."
+            "This request needs live data, external verification, or an action like booking, "
+            "so it should be handled by the ReAct agent or a tool-enabled workflow instead of "
+            "the baseline chatbot."
         ),
         "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
         "latency_ms": 0,
