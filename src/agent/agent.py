@@ -221,32 +221,46 @@ app = graph.compile()
 # ======================
 # 🔹 RUN
 # ======================
-if __name__ == "__main__":
-    print("🌍 Travel Planning Agent (LangGraph)")
-    print("-----------------------------------")
+def run_agent(user_input: str) -> str:
+    """
+    Run the agent with the given user input and return the final response.
 
-    while True:
-        user_input = input("\nEnter your query (or type 'exit'): ")
+    Args:
+        user_input (str): The user's query.
 
-        if user_input.lower() == "exit":
-            print("Goodbye 👋")
-            break
+    Returns:
+        str: The agent's final response.
+    """
+    state: AgentState = {
+        "input": user_input,
+        "messages": [],
+        "last_response": "",
+        "tool_name": "",
+        "tool_args": "",
+        "observation": "",
+        "used_tools": [],
+        "steps": 0,
+    }
 
-        state: AgentState = {
-            "input": user_input,
-            "messages": [],
-            "last_response": "",
-            "tool_name": "",
-            "tool_args": "",
-            "observation": "",
-            "used_tools": [],
-            "steps": 0,
-        }
+    result = app.invoke(state)
+    return result["last_response"]
 
-        result = app.invoke(state)
 
-        print("\n✅ FINAL ANSWER:")
-        print(result["last_response"])
+# if __name__ == "__main__":
+#     print("🌍 Travel Planning Agent (LangGraph)")
+#     print("-----------------------------------")
 
-        print("\n🛠 Tools used:", result["used_tools"])
-        print("-----------------------------------")
+#     while True:
+#         user_input = input("\nEnter your query (or type 'exit'): ")
+
+#         if user_input.lower() == "exit":
+#             print("Goodbye 👋")
+#             break
+
+#         result = run_agent(user_input)
+
+#         print("\n✅ FINAL ANSWER:")
+#         print(result)
+
+#         print("\n🛠 Tools used:", result["used_tools"])
+#         print("-----------------------------------")

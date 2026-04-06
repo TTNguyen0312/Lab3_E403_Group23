@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from chatbot import run_chatbot
+from chatbot.chatbot import run_chatbot
 from src.telemetry.logger import logger
 from tests.chatbot_benchmark_data import CHATBOT_BENCHMARK_CASES
 
